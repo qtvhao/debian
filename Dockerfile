@@ -6,7 +6,7 @@ ENV DEBIAN_FRONTEND noninteractive
 ENV DL_GOOGLE_CHROME_VERSION="https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb"
 RUN python3 -m venv venv
 RUN set -xeu; \
-    . venv/bin/activate \
+    . venv/bin/activate; \
     apt-get update; \
     apt-get install -y --no-install-recommends \
         curl \
