@@ -5,7 +5,7 @@ FROM python:3.12-bookworm
 ENV DEBIAN_FRONTEND noninteractive
 ENV DL_GOOGLE_CHROME_VERSION="https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb"
 RUN python3 -m venv venv
-RUN set -xeu; \
+RUN set -xe; \
     . venv/bin/activate; \
     apt-get update; \
     apt-get install -y --no-install-recommends \
@@ -40,7 +40,6 @@ RUN set -xeu; \
     rm chromedriver_linux64.zip; \
     which chromedriver; \
     apt-get clean; \
-    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*; \
     curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh |  bash; \
     . $HOME/.nvm/nvm.sh; \
     nvm install 20; \
@@ -50,11 +49,11 @@ RUN set -xeu; \
     npm --version; \
     npm cache clean --force; \
     yarn cache clean --force; \
-    rm -rf /tmp/* /var/tmp/* /root/.npm; \
     apt-get autoremove -y; \
     apt-get autoclean -y; \
     apt-get clean -y; \
-    rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/* /var/cache/debconf/*-old /var/cache/debconf/*-new /var/cache/debconf/*-dist;
+    rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*; \
+    rm -rf /tmp/* /var/tmp/*; rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*;
 RUN mkdir -p /var/run/dbus;
 
 RUN echo "" > "/etc/sysctl.d/local.conf"; \
