@@ -68,4 +68,4 @@ RUN echo "" > "/etc/sysctl.d/local.conf"; \
 COPY requirements.txt /app/
 RUN . venv/bin/activate && . $HOME/.nvm/nvm.sh && pip install --no-cache-dir -r requirements.txt
 COPY package.json yarn.lock /app/
-RUN . venv/bin/activate && . $HOME/.nvm/nvm.sh && yarn install
+RUN . venv/bin/activate && . $HOME/.nvm/nvm.sh && yarn install --no-cache
