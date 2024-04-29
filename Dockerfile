@@ -17,6 +17,7 @@ RUN set -xe; \
         cifs-utils \
         wget \
         imagemagick \
+        ffmpeg \
         sudo \
         gnupg \
         lsb-release \
