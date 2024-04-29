@@ -42,6 +42,7 @@ RUN set -xe; \
     which chromedriver; \
     apt-get clean; \
     curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh |  bash; \
+    echo 'export NVM_DIR="$HOME/.nvm"' >> $HOME/.bashrc; \
     . $HOME/.nvm/nvm.sh; \
     nvm install 20; \
     nvm use 20; \
