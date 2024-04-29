@@ -54,7 +54,7 @@ RUN set -xe; \
     apt-get clean -y; \
     rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*; \
     rm -rf /tmp/* /var/tmp/*; rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*;
-RUN wget https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh && \
+RUN . venv/bin/activate && wget https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh && \
     chmod +x wait-for-it.sh
 RUN mkdir -p /var/run/dbus;
 
@@ -65,6 +65,6 @@ RUN echo "" > "/etc/sysctl.d/local.conf"; \
 
 WORKDIR /app/
 COPY requirements.txt /app/
-RUN pip install --no-cache-dir -r requirements.txt
+RUN . venv/bin/activate && pip install --no-cache-dir -r requirements.txt
 COPY package.json yarn.lock /app/
-RUN yarn install
+RUN . venv/bin/activate && yarn install
