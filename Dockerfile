@@ -1,5 +1,9 @@
 FROM python:3.12-bookworm
 
+# set -xe is used to exit immediately if a command exits with a non-zero status, and print the command to stderr.
+# -u is used to force the stdout and stderr streams to be unbuffered.
+ENV DEBIAN_FRONTEND noninteractive
+ENV DL_GOOGLE_CHROME_VERSION="https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb"
 RUN set -xe; \
     apt-get update; \
     apt-get install -y --no-install-recommends \
@@ -23,6 +27,15 @@ RUN set -xe; \
         locales \
         task-japanese \
     ; \
+    curl -sSL -o google-chrome-stable_current_amd64.deb $DL_GOOGLE_CHROME_VERSION; \
+    dpkg -i google-chrome-stable_current_amd64.deb || apt-get -fy --no-install-recommends install; \
+    rm google-chrome-stable_current_amd64.deb; \
+    which google-chrome-stable; \
+    curl -sSL -o chromedriver_linux64.zip https://chromedriver.storage.googleapis.com/$(curl -sSL https://chromedriver.storage.googleapis.com/LATEST_RELEASE)/chromedriver_linux64.zip; \
+    unzip chromedriver_linux64.zip; \
+    mv chromedriver /usr/local/bin/; \
+    rm chromedriver_linux64.zip; \
+    which chromedriver; \
     apt-get clean; \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*; \
     curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh |  bash; \
@@ -38,8 +51,14 @@ RUN set -xe; \
     apt-get autoremove -y; \
     apt-get autoclean -y; \
     apt-get clean -y; \
-    apt-get purge -y; \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*;
+
+RUN mkdir -p /var/run/dbus;
+
+RUN echo "" > "/etc/sysctl.d/local.conf"; \
+    echo "fs.inotify.max_user_watches=95956992" >> "/etc/sysctl.d/local.conf"; \
+    echo "fs.inotify.max_user_instances=32768" >> "/etc/sysctl.d/local.conf"; \
+    echo "fs.inotify.max_queued_events=4194304" >> "/etc/sysctl.d/local.conf";
 # RUN apt-get update && apt-get install -y curl git gh && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 # RUN python3 -m venv venv && . venv/bin/activate && pip install --upgrade pip
 # # 
