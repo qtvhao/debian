@@ -55,7 +55,7 @@ RUN set -xe; \
     rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*; \
     rm -rf /tmp/* /var/tmp/*; rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*;
 RUN wget https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh && \
-    chmod +x wait-for-it.sh &&
+    chmod +x wait-for-it.sh
 RUN mkdir -p /var/run/dbus;
 
 RUN echo "" > "/etc/sysctl.d/local.conf"; \
