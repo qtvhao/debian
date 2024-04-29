@@ -1,4 +1,5 @@
 FROM python:3.12-bookworm
+WORKDIR /app/
 
 # set -xe is used to exit immediately if a command exits with a non-zero status, and print the command to stderr.
 # -u is used to force the stdout and stderr streams to be unbuffered.
@@ -63,7 +64,6 @@ RUN echo "" > "/etc/sysctl.d/local.conf"; \
     echo "fs.inotify.max_user_instances=32768" >> "/etc/sysctl.d/local.conf"; \
     echo "fs.inotify.max_queued_events=4194304" >> "/etc/sysctl.d/local.conf";
 
-WORKDIR /app/
 COPY requirements.txt /app/
 RUN . venv/bin/activate && pip install --no-cache-dir -r requirements.txt
 COPY package.json yarn.lock /app/
