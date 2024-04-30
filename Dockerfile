@@ -1,4 +1,4 @@
-FROM python:3.12-bookworm
+FROM python:3.12-bookworm as base
 WORKDIR /app/
 
 # set -xe is used to exit immediately if a command exits with a non-zero status, and print the command to stderr.
@@ -65,7 +65,18 @@ RUN echo "" > "/etc/sysctl.d/local.conf"; \
     echo "fs.inotify.max_user_instances=32768" >> "/etc/sysctl.d/local.conf"; \
     echo "fs.inotify.max_queued_events=4194304" >> "/etc/sysctl.d/local.conf";
 
+FROM base as requirements
 COPY requirements.txt /app/
-RUN . venv/bin/activate && . $HOME/.nvm/nvm.sh && pip install --no-cache-dir -r requirements.txt
+RUN python3 -m venv venv
+RUN . venv/bin/activate && pip install --no-cache-dir -r requirements.txt
+
+FROM base as yarn
 COPY package.json yarn.lock /app/
 RUN . venv/bin/activate && . $HOME/.nvm/nvm.sh && yarn install --no-cache
+
+FROM base
+COPY requirements.txt /app/
+COPY --from=requirements /app/venv /app/venv
+# RUN . venv/bin/activate && . $HOME/.nvm/nvm.sh && pip install --no-cache-dir -r requirements.txt
+COPY package.json yarn.lock /app/
+COPY --from=yarn /app/node_modules /app/node_modules
