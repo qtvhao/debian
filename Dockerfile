@@ -6,6 +6,11 @@ WORKDIR /app/
 ENV DEBIAN_FRONTEND noninteractive
 ENV DL_GOOGLE_CHROME_VERSION="https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb"
 RUN python3 -m venv venv
+
+ENV NVM_DIR="/root/.nvm"
+ENV NODE_VERSION="20.12.2"
+ENV PATH $NVM_DIR/versions/node/v$NODE_VERSION/bin:$NVM_DIR/v$NODE_VERSION/bin:/root/.nvm/versions/node/v$NODE_VERSION/bin/:$PATH
+
 RUN set -xe; \
     . venv/bin/activate; \
     apt-get update; \
@@ -64,6 +69,7 @@ RUN set -xe; \
     apt-get clean -y; \
     rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*; \
     rm -rf /tmp/* /var/tmp/*; rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*;
+RUN which yarn
 RUN . venv/bin/activate && wget https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh && \
     chmod +x wait-for-it.sh
 RUN mkdir -p /var/run/dbus;
