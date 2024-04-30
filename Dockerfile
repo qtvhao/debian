@@ -17,6 +17,7 @@ RUN set -xe; \
         cifs-utils \
         wget \
         imagemagick \
+        ffmpeg \
         sudo \
         gnupg \
         lsb-release \
@@ -30,6 +31,13 @@ RUN set -xe; \
         locales \
         task-japanese \
         ca-certificates \
+        fonts-liberation \
+        fonts-dejavu \
+        fonts-freefont-ttf \
+        fonts-ipafont-gothic \
+        fonts-ipafont-mincho \
+        fonts-wqy-zenhei \
+        fonts-wqy-microhei \
     ; \
     curl -sSL -o google-chrome-stable_current_amd64.deb $DL_GOOGLE_CHROME_VERSION; \
     dpkg -i google-chrome-stable_current_amd64.deb || apt-get -fy --no-install-recommends install; \
