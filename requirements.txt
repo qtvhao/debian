@@ -3,3 +3,11 @@ requests==2.31.0
 moviepy~=2.0.0.dev2
 pillow~=10.3.0
 opencv-python~=4.9.0.80
+cmake
+wheel
+distro
+packaging
+scikit-build
+numpy
+pip
+pytesseract
