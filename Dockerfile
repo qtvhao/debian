@@ -1,4 +1,7 @@
-FROM python:3.12-bookworm as base
+FROM scratch as base
+# Squash the image to reduce the size
+COPY --from=python:3.12-bookworm / /
+# Set the working directory for the container
 WORKDIR /app/
 
 # set -xe is used to exit immediately if a command exits with a non-zero status, and print the command to stderr.
@@ -65,6 +68,7 @@ RUN set -xe; \
     npm --version; \
     npm cache clean --force; \
     yarn cache clean --force; \
+    apt-get purge -y --auto-remove chromium; \
     apt-get autoremove -y; \
     apt-get autoclean -y; \
     apt-get clean -y; \
