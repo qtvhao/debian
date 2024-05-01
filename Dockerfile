@@ -15,6 +15,7 @@ RUN set -xe; \
     . venv/bin/activate; \
     apt-get update; \
     apt-get install -y --no-install-recommends \
+        gnome-screenshot \
         curl \
         git \
         gh \
