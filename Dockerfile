@@ -8,9 +8,9 @@ ENV DEBIAN_FRONTEND noninteractive
 ENV DL_GOOGLE_CHROME_VERSION="https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb"
 RUN python3 -m venv venv
 
-ENV NVM_DIR="/root/.nvm"
-ENV NODE_VERSION="20.12.2"
-ENV PATH $NVM_DIR/versions/node/v$NODE_VERSION/bin:$NVM_DIR/v$NODE_VERSION/bin:/root/.nvm/versions/node/v$NODE_VERSION/bin/:$PATH
+#ENV NVM_DIR="/root/.nvm"
+#ENV NODE_VERSION="20.12.2"
+# ENV PATH $NVM_DIR/versions/node/v$NODE_VERSION/bin:$NVM_DIR/v$NODE_VERSION/bin:/root/.nvm/versions/node/v$NODE_VERSION/bin/:$PATH
 
 RUN set -xe; \
     . venv/bin/activate; \
@@ -54,8 +54,14 @@ RUN set -xe; \
     rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*; \
     rm -rf /tmp/* /var/tmp/*; rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*;
 
+ENV NODE_URL="https://nodejs.org/dist/v20.13.1/node-v20.13.1-linux-x64.tar.xz"
 RUN set -xe; \
 . venv/bin/activate; \
+curl -sSL -o node-v20.13.1-linux-x64.tar.xz $NODE_URL; \
+tar -xJf node-v20.13.1-linux-x64.tar.xz -C /usr/local --strip-components=1; \
+rm node-v20.13.1-linux-x64.tar.xz; \
+which node; \
+node --version; \
 apt-get update; \
 apt-get install -y --no-install-recommends \
     ca-certificates \
@@ -77,11 +83,6 @@ apt-get install -y --no-install-recommends \
     rm chromedriver_linux64.zip; \
     which chromedriver; \
     apt-get clean; \
-    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh |  bash; \
-    echo 'export NVM_DIR="$HOME/.nvm"' >> $HOME/.bashrc; \
-    . $HOME/.nvm/nvm.sh; \
-    nvm install 20; \
-    nvm use 20; \
     npm install -g yarn; \
     yarn --version; \
     npm --version; \
