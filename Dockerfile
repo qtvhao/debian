@@ -28,27 +28,6 @@ RUN set -xe; \
         sudo \
         gnupg \
     ; \
-    curl -sSL -o google-chrome-stable_current_amd64.deb $DL_GOOGLE_CHROME_VERSION; \
-    dpkg -i google-chrome-stable_current_amd64.deb || apt-get -fy --no-install-recommends install; \
-    rm google-chrome-stable_current_amd64.deb; \
-    which google-chrome-stable; \
-    curl -sSL -o chromedriver_linux64.zip https://chromedriver.storage.googleapis.com/$(curl -sSL https://chromedriver.storage.googleapis.com/LATEST_RELEASE)/chromedriver_linux64.zip; \
-    unzip chromedriver_linux64.zip; \
-    mv chromedriver /usr/local/bin/; \
-    rm chromedriver_linux64.zip; \
-    which chromedriver; \
-    apt-get clean; \
-    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh |  bash; \
-    echo 'export NVM_DIR="$HOME/.nvm"' >> $HOME/.bashrc; \
-    . $HOME/.nvm/nvm.sh; \
-    nvm install 20; \
-    nvm use 20; \
-    npm install -g yarn; \
-    yarn --version; \
-    npm --version; \
-    npm cache clean --force; \
-    yarn cache clean --force; \
-    apt-get purge -y --auto-remove chromium; \
     apt-get autoremove -y; \
     apt-get autoclean -y; \
     apt-get clean -y; \
@@ -69,27 +48,6 @@ RUN set -xe; \
         locales \
         task-japanese \
     ; \
-    curl -sSL -o google-chrome-stable_current_amd64.deb $DL_GOOGLE_CHROME_VERSION; \
-    dpkg -i google-chrome-stable_current_amd64.deb || apt-get -fy --no-install-recommends install; \
-    rm google-chrome-stable_current_amd64.deb; \
-    which google-chrome-stable; \
-    curl -sSL -o chromedriver_linux64.zip https://chromedriver.storage.googleapis.com/$(curl -sSL https://chromedriver.storage.googleapis.com/LATEST_RELEASE)/chromedriver_linux64.zip; \
-    unzip chromedriver_linux64.zip; \
-    mv chromedriver /usr/local/bin/; \
-    rm chromedriver_linux64.zip; \
-    which chromedriver; \
-    apt-get clean; \
-    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh |  bash; \
-    echo 'export NVM_DIR="$HOME/.nvm"' >> $HOME/.bashrc; \
-    . $HOME/.nvm/nvm.sh; \
-    nvm install 20; \
-    nvm use 20; \
-    npm install -g yarn; \
-    yarn --version; \
-    npm --version; \
-    npm cache clean --force; \
-    yarn cache clean --force; \
-    apt-get purge -y --auto-remove chromium; \
     apt-get autoremove -y; \
     apt-get autoclean -y; \
     apt-get clean -y; \
