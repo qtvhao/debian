@@ -1,6 +1,4 @@
-FROM scratch as base
-# Squash the image to reduce the size
-COPY --from=python:3.12-bookworm / /
+FROM python:3.12-bookworm as base
 # Set the working directory for the container
 WORKDIR /app/
 
@@ -29,6 +27,37 @@ RUN set -xe; \
         ffmpeg \
         sudo \
         gnupg \
+    ; \
+    curl -sSL -o google-chrome-stable_current_amd64.deb $DL_GOOGLE_CHROME_VERSION; \
+    dpkg -i google-chrome-stable_current_amd64.deb || apt-get -fy --no-install-recommends install; \
+    rm google-chrome-stable_current_amd64.deb; \
+    which google-chrome-stable; \
+    curl -sSL -o chromedriver_linux64.zip https://chromedriver.storage.googleapis.com/$(curl -sSL https://chromedriver.storage.googleapis.com/LATEST_RELEASE)/chromedriver_linux64.zip; \
+    unzip chromedriver_linux64.zip; \
+    mv chromedriver /usr/local/bin/; \
+    rm chromedriver_linux64.zip; \
+    which chromedriver; \
+    apt-get clean; \
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh |  bash; \
+    echo 'export NVM_DIR="$HOME/.nvm"' >> $HOME/.bashrc; \
+    . $HOME/.nvm/nvm.sh; \
+    nvm install 20; \
+    nvm use 20; \
+    npm install -g yarn; \
+    yarn --version; \
+    npm --version; \
+    npm cache clean --force; \
+    yarn cache clean --force; \
+    apt-get purge -y --auto-remove chromium; \
+    apt-get autoremove -y; \
+    apt-get autoclean -y; \
+    apt-get clean -y; \
+    rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*; \
+    rm -rf /tmp/* /var/tmp/*; rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*;
+RUN set -xe; \
+    . venv/bin/activate; \
+    apt-get update; \
+    apt-get install -y --no-install-recommends \
         lsb-release \
         redis-tools \
         procps \
@@ -39,14 +68,46 @@ RUN set -xe; \
         socat \
         locales \
         task-japanese \
-        ca-certificates \
-        fonts-liberation \
-        fonts-dejavu \
-        fonts-freefont-ttf \
-        fonts-ipafont-gothic \
-        fonts-ipafont-mincho \
-        fonts-wqy-zenhei \
-        fonts-wqy-microhei \
+    ; \
+    curl -sSL -o google-chrome-stable_current_amd64.deb $DL_GOOGLE_CHROME_VERSION; \
+    dpkg -i google-chrome-stable_current_amd64.deb || apt-get -fy --no-install-recommends install; \
+    rm google-chrome-stable_current_amd64.deb; \
+    which google-chrome-stable; \
+    curl -sSL -o chromedriver_linux64.zip https://chromedriver.storage.googleapis.com/$(curl -sSL https://chromedriver.storage.googleapis.com/LATEST_RELEASE)/chromedriver_linux64.zip; \
+    unzip chromedriver_linux64.zip; \
+    mv chromedriver /usr/local/bin/; \
+    rm chromedriver_linux64.zip; \
+    which chromedriver; \
+    apt-get clean; \
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh |  bash; \
+    echo 'export NVM_DIR="$HOME/.nvm"' >> $HOME/.bashrc; \
+    . $HOME/.nvm/nvm.sh; \
+    nvm install 20; \
+    nvm use 20; \
+    npm install -g yarn; \
+    yarn --version; \
+    npm --version; \
+    npm cache clean --force; \
+    yarn cache clean --force; \
+    apt-get purge -y --auto-remove chromium; \
+    apt-get autoremove -y; \
+    apt-get autoclean -y; \
+    apt-get clean -y; \
+    rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*; \
+    rm -rf /tmp/* /var/tmp/*; rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*;
+
+RUN set -xe; \
+. venv/bin/activate; \
+apt-get update; \
+apt-get install -y --no-install-recommends \
+    ca-certificates \
+    fonts-liberation \
+    fonts-dejavu \
+    fonts-freefont-ttf \
+    fonts-ipafont-gothic \
+    fonts-ipafont-mincho \
+    fonts-wqy-zenhei \
+    fonts-wqy-microhei \
     ; \
     curl -sSL -o google-chrome-stable_current_amd64.deb $DL_GOOGLE_CHROME_VERSION; \
     dpkg -i google-chrome-stable_current_amd64.deb || apt-get -fy --no-install-recommends install; \
@@ -84,18 +145,18 @@ RUN echo "" > "/etc/sysctl.d/local.conf"; \
     echo "fs.inotify.max_user_instances=32768" >> "/etc/sysctl.d/local.conf"; \
     echo "fs.inotify.max_queued_events=4194304" >> "/etc/sysctl.d/local.conf";
 
-FROM base as requirements
-COPY requirements.txt /app/
-RUN python3 -m venv venv
-RUN . venv/bin/activate && pip install --no-cache-dir -r requirements.txt
+#FROM base as requirements
+#COPY requirements.txt /app/
+#RUN python3 -m venv venv
+#RUN . venv/bin/activate && pip install --no-cache-dir -r requirements.txt
 
-FROM base as yarn
-COPY package.json yarn.lock /app/
-RUN . venv/bin/activate && . $HOME/.nvm/nvm.sh && yarn install --no-cache
+#FROM base as yarn
+#COPY package.json yarn.lock /app/
+#RUN . venv/bin/activate && . $HOME/.nvm/nvm.sh && yarn install --no-cache
 
 FROM base
-COPY requirements.txt /app/
-COPY --from=requirements /app/venv /app/venv
+#COPY requirements.txt /app/
+#COPY --from=requirements /app/venv /app/venv
 # RUN . venv/bin/activate && . $HOME/.nvm/nvm.sh && pip install --no-cache-dir -r requirements.txt
 COPY package.json yarn.lock /app/
-COPY --from=yarn /app/node_modules /app/node_modules
+#COPY --from=yarn /app/node_modules /app/node_modules
